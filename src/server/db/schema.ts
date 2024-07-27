@@ -1,30 +1,39 @@
-// Example model schema from the Drizzle docs
-// https://orm.drizzle.team/docs/sql-schema-declaration
-
+/* eslint-disable perfectionist/sort-objects */
+import {
+  sqliteTable as table,
+  primaryKey,
+  numeric,
+  text,
+  int,
+} from "drizzle-orm/sqlite-core";
 import { sql } from "drizzle-orm";
-import { index, int, sqliteTableCreator, text } from "drizzle-orm/sqlite-core";
 
-/**
- * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
- * database instance for multiple projects.
- *
- * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
- */
-export const createTable = sqliteTableCreator((name) => `dashboard_${name}`);
-
-export const posts = createTable(
-  "post",
+export const builds = table(
+  "builds",
   {
-    id: int("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
-    name: text("name", { length: 256 }),
-    createdAt: int("created_at", { mode: "timestamp" })
+    environment: text("environment").notNull(),
+    timestamp: int("timestamp", { mode: "timestamp" })
       .default(sql`(unixepoch())`)
       .notNull(),
-    updatedAt: int("updated_at", { mode: "timestamp" }).$onUpdate(
-      () => new Date()
-    ),
+    duration: numeric("duration").notNull(),
+    status: text("status", { enum: ["success", "fail", "pending"] }).notNull(),
+    users: text("users", { mode: "json" })
+      .default(sql`[]`)
+      .notNull()
+      .$type<string[]>(),
   },
-  (example) => ({
-    nameIndex: index("name_idx").on(example.name),
-  })
+  (table) => ({
+    pk: primaryKey({ columns: [table.environment, table.timestamp] }),
+  }),
 );
+
+export const statistics = table("statistics", {
+  label: text("label").primaryKey(),
+  value: int("value").default(0),
+});
+
+export const activity = table("activity", {
+  timestamp: text("timestamp").primaryKey(),
+  value: int("value").default(0).notNull(),
+  event: text("event"),
+});
