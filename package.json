@@ -4,25 +4,25 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "next build",
+    "build": "cross-env NODE_ENV=production next build && tsc --project tsconfig.server.json && tsc-esm-fix build --tsconfig tsconfig.server.json",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
-    "dev": "next dev",
+    "dev": "tsx server.ts",
     "lint": "next lint",
-    "start": "next start"
+    "start": "cross-env NODE_ENV=production node build/server.js"
   },
   "dependencies": {
     "@libsql/client": "^0.6.0",
     "@radix-ui/react-aspect-ratio": "^1.1.0",
-    "@t3-oss/env-nextjs": "^0.10.1",
     "@tanstack/react-query": "^5.50.0",
     "@trpc/client": "^11.0.0-rc.446",
     "@trpc/react-query": "^11.0.0-rc.446",
     "@trpc/server": "^11.0.0-rc.446",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "cross-env": "^7.0.3",
     "drizzle-orm": "^0.30.10",
     "geist": "^1.3.0",
     "lucide-react": "^0.414.0",
@@ -35,13 +35,15 @@
     "superjson": "^2.2.1",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
+    "tsx": "^4.16.2",
     "zod": "^3.23.3"
   },
   "devDependencies": {
     "@types/eslint": "^8.56.10",
-    "@types/node": "^20.14.10",
+    "@types/node": "^20.14.12",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
+    "@types/ws": "^8.5.11",
     "@typescript-eslint/eslint-plugin": "^7.1.1",
     "@typescript-eslint/parser": "^7.1.1",
     "drizzle-kit": "^0.21.4",
@@ -53,7 +55,9 @@
     "prettier": "^3.3.2",
     "prettier-plugin-tailwindcss": "^0.6.5",
     "tailwindcss": "^3.4.3",
-    "typescript": "^5.5.3"
+    "tsc-esm-fix": "^3.0.1",
+    "typescript": "^5.5.3",
+    "ws": "^8.18.0"
   },
   "ct3aMetadata": {
     "initVersion": "7.36.2"

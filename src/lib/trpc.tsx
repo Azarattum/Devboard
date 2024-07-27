@@ -1,21 +1,34 @@
 "use client";
 
+import {
+  defaultShouldDehydrateQuery,
+  QueryClientProvider,
+  QueryClient,
+} from "@tanstack/react-query";
 import { type inferRouterOutputs, type inferRouterInputs } from "@trpc/server";
-import { QueryClientProvider, type QueryClient } from "@tanstack/react-query";
-import { unstable_httpBatchStreamLink, loggerLink } from "@trpc/client";
+import { createWSClient, loggerLink, wsLink } from "@trpc/client";
 import { createTRPCReact } from "@trpc/react-query";
+import { type AppRouter } from "~/server/api/root";
 import SuperJSON from "superjson";
 import { useState } from "react";
-import { type AppRouter } from "~/server/api/root";
-import { createQueryClient } from "./query-client";
+
+const createQueryClient = () =>
+  new QueryClient({
+    defaultOptions: {
+      dehydrate: {
+        shouldDehydrateQuery: (query) =>
+          defaultShouldDehydrateQuery(query) ||
+          query.state.status === "pending",
+        serializeData: SuperJSON.serialize,
+      },
+      hydrate: { deserializeData: SuperJSON.deserialize },
+      queries: { staleTime: 30 * 1000 },
+    },
+  });
 
 let clientQueryClientSingleton: QueryClient | undefined = undefined;
 const getQueryClient = () => {
-  if (typeof window === "undefined") {
-    // Server: always make a new query client
-    return createQueryClient();
-  }
-  // Browser: use singleton pattern to keep the same query client
+  if (typeof window === "undefined") return createQueryClient();
   return (clientQueryClientSingleton ??= createQueryClient());
 };
 
@@ -47,13 +60,8 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
             process.env.NODE_ENV === "development" ||
             (op.direction === "down" && op.result instanceof Error),
         }),
-        unstable_httpBatchStreamLink({
-          headers: () => {
-            const headers = new Headers();
-            headers.set("x-trpc-source", "nextjs-react");
-            return headers;
-          },
-          url: getBaseUrl() + "/api/trpc",
+        wsLink({
+          client: createWSClient({ url: getBaseUrl() + "/api/trpc" }),
           transformer: SuperJSON,
         }),
       ],

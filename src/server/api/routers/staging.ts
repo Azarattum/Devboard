@@ -1,5 +1,5 @@
 import type { StagingStatus, StagingBuild } from "~/types/structures";
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import { createTRPCRouter, publicProcedure } from "../../api/trpc";
 
 export const stagingRouter = createTRPCRouter({
   statistics: publicProcedure.query(async () => {

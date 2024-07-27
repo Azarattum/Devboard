@@ -1,5 +1,5 @@
 import "~/styles/globals.css";
-import { TRPCReactProvider } from "~/trpc/react";
+import { TRPCReactProvider } from "~/lib/trpc";
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 

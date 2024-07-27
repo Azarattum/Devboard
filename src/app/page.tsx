@@ -1,7 +1,6 @@
 import { Environments } from "./_components/environments";
 import { Statistics } from "./_components/statistics";
 import { Activity } from "./_components/activity";
-import { HydrateClient } from "~/trpc/server";
 import { builds } from "~/server/db/schema";
 import { desc } from "drizzle-orm";
 import { db } from "~/server/db";
@@ -16,17 +15,15 @@ export default async function Home() {
   const statistics = await db.query.statistics.findMany();
 
   return (
-    <HydrateClient>
-      <main className="flex h-dvh w-dvw gap-16 p-8">
-        <Environments
-          className="col-start-1 row-span-2"
-          environments={environments}
-        />
-        <div className="flex grow flex-col justify-between gap-16">
-          <Statistics className="col-start-2" statistics={statistics} />
-          <Activity className="col-start-2" activity={activity} />
-        </div>
-      </main>
-    </HydrateClient>
+    <main className="flex h-dvh w-dvw gap-16 p-8">
+      <Environments
+        className="col-start-1 row-span-2"
+        environments={environments}
+      />
+      <div className="flex grow flex-col justify-between gap-16">
+        <Statistics className="col-start-2" statistics={statistics} />
+        <Activity className="col-start-2" activity={activity} />
+      </div>
+    </main>
   );
 }

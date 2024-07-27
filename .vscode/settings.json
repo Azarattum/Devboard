@@ -1,3 +1,10 @@
 {
-  "cSpell.words": ["preproduction", "TRPC", "unixepoch"]
+  "cSpell.words": [
+    "preproduction",
+    "superjson",
+    "tanstack",
+    "TRPC",
+    "unixepoch"
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
