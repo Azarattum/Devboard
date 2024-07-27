@@ -79,7 +79,7 @@ export function Activity({
                 x.event &&
                 `${x.event} ${x.timestamp.toTimeString().slice(0, 5)}`
               }
-              className="fill-foreground animate-in fade-in"
+              className="fill-foreground duration-500 animate-in fade-in slide-in-from-top-2"
               fill="var(--ok-900)"
               data={activity}
               position="top"
