@@ -75,9 +75,13 @@ export function Activity({
             stackId="a"
           >
             <LabelList
+              dataKey={(x) =>
+                x.event &&
+                `${x.event} ${x.timestamp.toTimeString().slice(0, 5)}`
+              }
               className="fill-foreground animate-in fade-in"
               fill="var(--ok-900)"
-              dataKey="event"
+              data={activity}
               position="top"
               offset={16}
             />
