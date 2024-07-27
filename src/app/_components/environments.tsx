@@ -3,8 +3,8 @@
 import type { PropsWithChildren, HTMLAttributes } from "react";
 import { TriangleAlert, Ellipsis, Check } from "lucide-react";
 import { type EnvironmentBuilds } from "~/server/db/schema";
-import { cn } from "~/lib/utils";
 import { Builds } from "./builds";
+import { cn } from "~/lib/utils";
 
 export function Environments({
   environments,

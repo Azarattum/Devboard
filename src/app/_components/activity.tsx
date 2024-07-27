@@ -8,10 +8,10 @@ import {
   Area,
   Dot,
 } from "recharts";
-import { type HTMLAttributes, Fragment } from "react";
-import { type Activity as ActivityType } from "~/server/db/schema";
-import { cn } from "~/lib/utils";
 import { ChartTooltipContent, ChartContainer, ChartTooltip } from "./chart";
+import { type Activity as ActivityType } from "~/server/db/schema";
+import { type HTMLAttributes, Fragment } from "react";
+import { cn } from "~/lib/utils";
 
 export function Activity({
   className,

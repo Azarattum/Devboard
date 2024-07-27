@@ -1,8 +1,8 @@
 "use client";
 
+import { ChartTooltipContent, ChartContainer, ChartTooltip } from "./chart";
 import { BarChart, XAxis, YAxis, Cell, Bar } from "recharts";
 import { type Build } from "~/server/db/schema";
-import { ChartTooltipContent, ChartContainer, ChartTooltip } from "./chart";
 
 export function Builds({
   className,

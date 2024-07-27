@@ -1,8 +1,8 @@
 "use client";
 
+import { type Statistic } from "~/server/db/schema";
 import { type HTMLAttributes } from "react";
 import { v3 as hash } from "murmurhash";
-import { type Statistic } from "~/server/db/schema";
 import { cn } from "~/lib/utils";
 
 export function Statistics({

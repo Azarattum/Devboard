@@ -1,7 +1,7 @@
+import "~/styles/globals.css";
+import { TRPCReactProvider } from "~/trpc/react";
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
-import { TRPCReactProvider } from "~/trpc/react";
-import "~/styles/globals.css";
 
 export const metadata: Metadata = {
   icons: [{ url: "/favicon.ico", rel: "icon" }],

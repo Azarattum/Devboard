@@ -1,10 +1,12 @@
-import { desc } from "drizzle-orm";
-import { HydrateClient } from "~/trpc/server";
-import { builds } from "~/server/db/schema";
-import { db } from "~/server/db";
 import { Environments } from "./_components/environments";
 import { Statistics } from "./_components/statistics";
 import { Activity } from "./_components/activity";
+import { HydrateClient } from "~/trpc/server";
+import { builds } from "~/server/db/schema";
+import { desc } from "drizzle-orm";
+import { db } from "~/server/db";
+
+export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const environments = await db.query.environments.findMany({
@@ -15,7 +17,7 @@ export default async function Home() {
 
   return (
     <HydrateClient>
-      <main className="to-emerald-50-50 flex h-dvh w-dvw gap-16 p-8">
+      <main className="flex h-dvh w-dvw gap-16 p-8">
         <Environments
           className="col-start-1 row-span-2"
           environments={environments}

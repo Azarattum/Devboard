@@ -60,18 +60,19 @@ const config = {
         order: "desc",
       },
     ],
-    "perfectionist/sort-union-types": [
+    "perfectionist/sort-imports": [
       "error",
       {
-        groups: ["unknown", "nullish"],
+        groups: ["side-effect", "type", "unknown"],
+        newlinesBetween: "never",
         type: "line-length",
         order: "desc",
       },
     ],
-    "perfectionist/sort-imports": [
+    "perfectionist/sort-union-types": [
       "error",
       {
-        newlinesBetween: "never",
+        groups: ["unknown", "nullish"],
         type: "line-length",
         order: "desc",
       },
