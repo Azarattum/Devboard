@@ -1,12 +1,11 @@
 "use client";
 
+import { type inferRouterOutputs, type inferRouterInputs } from "@trpc/server";
 import { QueryClientProvider, type QueryClient } from "@tanstack/react-query";
-import { loggerLink, unstable_httpBatchStreamLink } from "@trpc/client";
+import { unstable_httpBatchStreamLink, loggerLink } from "@trpc/client";
 import { createTRPCReact } from "@trpc/react-query";
-import { type inferRouterInputs, type inferRouterOutputs } from "@trpc/server";
-import { useState } from "react";
 import SuperJSON from "superjson";
-
+import { useState } from "react";
 import { type AppRouter } from "~/server/api/root";
 import { createQueryClient } from "./query-client";
 
@@ -20,7 +19,8 @@ const getQueryClient = () => {
   return (clientQueryClientSingleton ??= createQueryClient());
 };
 
-export const api = createTRPCReact<AppRouter>();
+const API = createTRPCReact<AppRouter>();
+export { API as api };
 
 /**
  * Inference helper for inputs.
@@ -40,7 +40,7 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
   const queryClient = getQueryClient();
 
   const [trpcClient] = useState(() =>
-    api.createClient({
+    API.createClient({
       links: [
         loggerLink({
           enabled: (op) =>
@@ -48,23 +48,23 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
             (op.direction === "down" && op.result instanceof Error),
         }),
         unstable_httpBatchStreamLink({
-          transformer: SuperJSON,
-          url: getBaseUrl() + "/api/trpc",
           headers: () => {
             const headers = new Headers();
             headers.set("x-trpc-source", "nextjs-react");
             return headers;
           },
+          url: getBaseUrl() + "/api/trpc",
+          transformer: SuperJSON,
         }),
       ],
-    })
+    }),
   );
 
   return (
     <QueryClientProvider client={queryClient}>
-      <api.Provider client={trpcClient} queryClient={queryClient}>
+      <API.Provider queryClient={queryClient} client={trpcClient}>
         {props.children}
-      </api.Provider>
+      </API.Provider>
     </QueryClientProvider>
   );
 }

@@ -1,7 +1,7 @@
 import { HydrateClient } from "~/trpc/server";
+import { Production } from "./_components/production";
 import { Staging } from "./_components/staging";
 import { Stats } from "./_components/stats";
-import { Production } from "./_components/production";
 
 export default async function Home() {
   return (

@@ -1,11 +1,11 @@
 "use client";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "./chart";
-import { Bar, BarChart, Cell, XAxis, YAxis } from "recharts";
+import { BarChart, XAxis, YAxis, Cell, Bar } from "recharts";
 import type { StagingBuild } from "~/types/structures";
+import { ChartTooltipContent, ChartContainer, ChartTooltip } from "./chart";
 
 export function BuildGraph({
-  data,
   className,
+  data,
 }: {
   data: StagingBuild[];
   className: string;
@@ -28,28 +28,28 @@ export function BuildGraph({
   };
 
   return (
-    <ChartContainer config={{}} className={className}>
+    <ChartContainer className={className} config={{}}>
       <BarChart
         accessibilityLayer
-        data={data}
         layout="vertical"
         maxBarSize={20}
+        data={data}
       >
-        <XAxis type="number" dataKey="duration" hide />
+        <XAxis dataKey="duration" type="number" hide />
         <YAxis type="category" dataKey="time" hide />
         <ChartTooltip
-          cursor={false}
           // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
           formatter={(_1, _2, props) => props.payload.branch}
           content={<ChartTooltipContent hideIndicator />}
+          cursor={false}
         />
-        <Bar dataKey={"duration"} fill="var(--color-duration)" radius={5}>
+        <Bar fill="var(--color-duration)" dataKey={"duration"} radius={5}>
           {data.map((entry, index) => (
             <Cell
-              key={index}
-              strokeWidth={2}
               stroke={stroke(entry.duration)}
               fill={color(entry.duration)}
+              strokeWidth={2}
+              key={index}
             />
           ))}
         </Bar>

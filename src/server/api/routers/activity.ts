@@ -1,5 +1,5 @@
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import type { ActivityOnline } from "~/types/structures";
+import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
 export const activityRouter = createTRPCRouter({
   online: publicProcedure.query(() => {

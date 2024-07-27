@@ -1,65 +1,65 @@
+import type { StagingStatus, StagingBuild } from "~/types/structures";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-import type { StagingBuild, StagingStatus } from "~/types/structures";
 
 export const stagingRouter = createTRPCRouter({
-  status: publicProcedure.query(() => {
-    return {
-      development: {
-        type: "pending",
-        since: Date.now(),
-      },
-      preproduction: {
-        type: "fail",
-        since: Date.now(),
-      },
-    } satisfies Record<string, StagingStatus>;
-  }),
   statistics: publicProcedure.query(async () => {
     return {
+      preproduction: [
+        { time: Date.now() - 4, branch: "master", duration: 60_000 },
+        { branch: "something-3", time: Date.now() - 3, duration: 20_000 },
+        { time: Date.now() - 2, branch: "feature-1", duration: 30_000 },
+        { time: Date.now() - 1, branch: "feature-2", duration: 10_000 },
+        { branch: "feature-3", time: Date.now(), duration: 5_000 },
+        { branch: "feature-4", time: Date.now(), duration: 20_000 },
+        { branch: "feature-4", time: Date.now(), duration: 20_000 },
+        { branch: "feature-4", time: Date.now(), duration: 20_000 },
+        { branch: "feature-4", time: Date.now(), duration: 70_000 },
+        { branch: "feature-4", time: Date.now(), duration: 10_000 },
+        { branch: "feature-4", time: Date.now(), duration: 20_000 },
+        { time: Date.now() - 4, branch: "master", duration: 60_000 },
+        { time: Date.now() - 4, branch: "master", duration: 60_000 },
+        { time: Date.now() - 3, branch: "feature-1", duration: 30_000 },
+        { time: Date.now() - 2, branch: "feature-2", duration: 10_000 },
+        { time: Date.now() - 1, branch: "feature-3", duration: 5_000 },
+        { branch: "feature-4", time: Date.now(), duration: 20_000 },
+        { branch: "something-3", time: Date.now() - 3, duration: 20_000 },
+        { time: Date.now() - 2, branch: "feature-1", duration: 30_000 },
+        { time: Date.now() - 1, branch: "feature-2", duration: 10_000 },
+      ],
       development: [
         { time: Date.now() - 4, branch: "master", duration: 60_000 },
         { time: Date.now() - 3, branch: "feature-1", duration: 30_000 },
         { time: Date.now() - 2, branch: "feature-2", duration: 10_000 },
         { time: Date.now() - 1, branch: "feature-3", duration: 5_000 },
-        { time: Date.now(), branch: "feature-4", duration: 20_000 },
-        { time: Date.now(), branch: "feature-4", duration: 20_000 },
-        { time: Date.now(), branch: "feature-4", duration: 20_000 },
-        { time: Date.now(), branch: "feature-4", duration: 20_000 },
-        { time: Date.now(), branch: "feature-4", duration: 20_000 },
-        { time: Date.now(), branch: "feature-4", duration: 20_000 },
+        { branch: "feature-4", time: Date.now(), duration: 20_000 },
+        { branch: "feature-4", time: Date.now(), duration: 20_000 },
+        { branch: "feature-4", time: Date.now(), duration: 20_000 },
+        { branch: "feature-4", time: Date.now(), duration: 20_000 },
+        { branch: "feature-4", time: Date.now(), duration: 20_000 },
+        { branch: "feature-4", time: Date.now(), duration: 20_000 },
         { time: Date.now() - 4, branch: "master", duration: 60_000 },
         { time: Date.now() - 4, branch: "master", duration: 60_000 },
         { time: Date.now() - 3, branch: "feature-1", duration: 30_000 },
         { time: Date.now() - 2, branch: "feature-2", duration: 10_000 },
         { time: Date.now() - 1, branch: "feature-3", duration: 5_000 },
-        { time: Date.now(), branch: "feature-4", duration: 20_000 },
+        { branch: "feature-4", time: Date.now(), duration: 20_000 },
         { time: Date.now() - 3, branch: "feature-1", duration: 30_000 },
         { time: Date.now() - 2, branch: "feature-2", duration: 10_000 },
         { time: Date.now() - 1, branch: "feature-3", duration: 5_000 },
-        { time: Date.now(), branch: "feature-4", duration: 20_000 },
-      ],
-      preproduction: [
-        { time: Date.now() - 4, branch: "master", duration: 60_000 },
-        { time: Date.now() - 3, branch: "something-3", duration: 20_000 },
-        { time: Date.now() - 2, branch: "feature-1", duration: 30_000 },
-        { time: Date.now() - 1, branch: "feature-2", duration: 10_000 },
-        { time: Date.now(), branch: "feature-3", duration: 5_000 },
-        { time: Date.now(), branch: "feature-4", duration: 20_000 },
-        { time: Date.now(), branch: "feature-4", duration: 20_000 },
-        { time: Date.now(), branch: "feature-4", duration: 20_000 },
-        { time: Date.now(), branch: "feature-4", duration: 70_000 },
-        { time: Date.now(), branch: "feature-4", duration: 10_000 },
-        { time: Date.now(), branch: "feature-4", duration: 20_000 },
-        { time: Date.now() - 4, branch: "master", duration: 60_000 },
-        { time: Date.now() - 4, branch: "master", duration: 60_000 },
-        { time: Date.now() - 3, branch: "feature-1", duration: 30_000 },
-        { time: Date.now() - 2, branch: "feature-2", duration: 10_000 },
-        { time: Date.now() - 1, branch: "feature-3", duration: 5_000 },
-        { time: Date.now(), branch: "feature-4", duration: 20_000 },
-        { time: Date.now() - 3, branch: "something-3", duration: 20_000 },
-        { time: Date.now() - 2, branch: "feature-1", duration: 30_000 },
-        { time: Date.now() - 1, branch: "feature-2", duration: 10_000 },
+        { branch: "feature-4", time: Date.now(), duration: 20_000 },
       ],
     } satisfies Record<string, StagingBuild[]>;
+  }),
+  status: publicProcedure.query(() => {
+    return {
+      development: {
+        since: Date.now(),
+        type: "pending",
+      },
+      preproduction: {
+        since: Date.now(),
+        type: "fail",
+      },
+    } satisfies Record<string, StagingStatus>;
   }),
 });

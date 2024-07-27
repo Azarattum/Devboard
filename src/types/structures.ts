@@ -1,15 +1,15 @@
 export type StagingStatus = {
-  type: "ok" | "fail" | "pending";
+  type: "pending" | "success" | "fail";
   since: number;
 };
 
 export type StagingBuild = {
-  time: number;
-  branch: string;
   duration: number;
+  branch: string;
+  time: number;
 };
 
 export type ActivityOnline = {
-  time: number;
   online: number;
+  time: number;
 };

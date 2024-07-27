@@ -1,6 +1,6 @@
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
-import { stagingRouter } from "./routers/staging";
 import { activityRouter } from "./routers/activity";
+import { stagingRouter } from "./routers/staging";
 
 /**
  * This is the primary router for your server.
