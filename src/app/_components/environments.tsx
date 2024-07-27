@@ -1,17 +1,18 @@
 "use client";
+
 import type { PropsWithChildren, HTMLAttributes } from "react";
 import { TriangleAlert, Ellipsis, Check } from "lucide-react";
-import { api } from "~/trpc/react";
+import { type EnvironmentBuilds } from "~/server/db/schema";
 import { cn } from "~/lib/utils";
-import { BuildGraph } from "./build-graph";
+import { Builds } from "./builds";
 
-export function Staging({
+export function Environments({
+  environments,
   className,
   ...props
-}: HTMLAttributes<HTMLSelectElement>) {
-  const [status] = api.staging.status.useSuspenseQuery();
-  const [statistics] = api.staging.statistics.useSuspenseQuery();
-
+}: {
+  environments?: EnvironmentBuilds[];
+} & HTMLAttributes<HTMLElement>) {
   const badge = {
     pending: ({ children }: PropsWithChildren) => (
       <div className="flex size-44 flex-col items-center justify-evenly gap-2 rounded-lg border border-amber-100 bg-amber-50 shadow-lg shadow-amber-500/10">
@@ -29,7 +30,7 @@ export function Staging({
         </div>
       </div>
     ),
-    ok: ({ children }: PropsWithChildren) => (
+    success: ({ children }: PropsWithChildren) => (
       <div className="flex size-44 flex-col items-center justify-evenly gap-2 rounded-lg border border-teal-100 bg-teal-50 shadow-lg shadow-teal-500/10">
         <Check className="box-content size-16 rounded-full border-2 border-teal-600 bg-teal-200 p-4 text-teal-600" />
         <div className="truncate text-center font-light uppercase text-teal-900">
@@ -45,16 +46,16 @@ export function Staging({
       {...props}
     >
       <div className="flex gap-4 animate-in fade-in zoom-in">
-        {Object.entries(status).map(([name, status]) => {
-          const Badge = badge[status.type];
+        {environments?.map(({ builds, name }) => {
+          const Badge = badge[builds[0]?.status ?? "pending"];
           return <Badge key={name}>{name}</Badge>;
         })}
       </div>
       <div className="grid grow grid-flow-col grid-cols-[50%_50%] border-t border-stone-100 p-4 after:pointer-events-none after:absolute after:bottom-0 after:left-0 after:block after:h-1/6 after:w-full after:bg-gradient-to-t after:from-white">
-        {Object.entries(statistics).map(([name, statistics]) => (
-          <BuildGraph
+        {environments?.map(({ builds, name }) => (
+          <Builds
             className="size-full [&_svg]:odd:-scale-x-100"
-            data={statistics}
+            builds={builds}
             key={name}
           />
         ))}

@@ -2,20 +2,34 @@
 import {
   sqliteTable as table,
   primaryKey,
-  numeric,
   text,
+  real,
   int,
 } from "drizzle-orm/sqlite-core";
-import { sql } from "drizzle-orm";
+import { type InferSelectModel, relations, sql } from "drizzle-orm";
+
+export const environments = table("environments", {
+  name: text("name").primaryKey(),
+});
+export type Environment = InferSelectModel<typeof environments>;
+
+export const environmentsRelations = relations(environments, ({ many }) => ({
+  builds: many(builds),
+}));
+export type EnvironmentBuilds = InferSelectModel<typeof environments> & {
+  builds: Build[];
+};
 
 export const builds = table(
   "builds",
   {
-    environment: text("environment").notNull(),
+    environment: text("environment")
+      .references(() => environments.name)
+      .notNull(),
     timestamp: int("timestamp", { mode: "timestamp" })
       .default(sql`(unixepoch())`)
       .notNull(),
-    duration: numeric("duration").notNull(),
+    duration: real("duration"),
     status: text("status", { enum: ["success", "fail", "pending"] }).notNull(),
     users: text("users", { mode: "json" })
       .default(sql`[]`)
@@ -26,14 +40,27 @@ export const builds = table(
     pk: primaryKey({ columns: [table.environment, table.timestamp] }),
   }),
 );
+export type Build = InferSelectModel<typeof builds>;
+
+export const buildsRelations = relations(builds, ({ one }) => ({
+  details: one(environments, {
+    fields: [builds.environment],
+    references: [environments.name],
+  }),
+}));
 
 export const statistics = table("statistics", {
   label: text("label").primaryKey(),
   value: int("value").default(0),
 });
+export type Statistic = InferSelectModel<typeof statistics>;
 
 export const activity = table("activity", {
-  timestamp: text("timestamp").primaryKey(),
+  timestamp: int("timestamp", { mode: "timestamp" })
+    .default(sql`(unixepoch())`)
+    .notNull()
+    .primaryKey(),
   value: int("value").default(0).notNull(),
   event: text("event"),
 });
+export type Activity = InferSelectModel<typeof activity>;
