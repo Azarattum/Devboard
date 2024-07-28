@@ -20,14 +20,6 @@ const config = {
         prefer: "type-imports",
       },
     ],
-    "@typescript-eslint/no-misused-promises": [
-      "error",
-      {
-        checksVoidReturn: {
-          attributes: false,
-        },
-      },
-    ],
     "@typescript-eslint/no-unused-vars": [
       "warn",
       {
@@ -35,6 +27,7 @@ const config = {
       },
     ],
     "@typescript-eslint/consistent-type-definitions": "off",
+    "@typescript-eslint/no-misused-promises": "off",
     "@typescript-eslint/require-await": "off",
     "@typescript-eslint/array-type": "off",
     // Drizzle
@@ -56,6 +49,7 @@ const config = {
       {
         customGroups: { accessor: "+(get|set) *", method: "*(*):*" },
         groups: ["unknown", "method", "accessor"],
+        partitionByNewLine: true,
         type: "line-length",
         order: "desc",
       },
@@ -69,18 +63,19 @@ const config = {
         order: "desc",
       },
     ],
-    "perfectionist/sort-union-types": [
+    "perfectionist/sort-objects": [
       "error",
       {
-        groups: ["unknown", "nullish"],
+        partitionByNewLine: true,
+        partitionByComment: true,
         type: "line-length",
         order: "desc",
       },
     ],
-    "perfectionist/sort-objects": [
+    "perfectionist/sort-union-types": [
       "error",
       {
-        partitionByComment: true,
+        groups: ["unknown", "nullish"],
         type: "line-length",
         order: "desc",
       },
