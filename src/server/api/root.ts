@@ -1,11 +1,7 @@
 import { createCallerFactory, createTRPCRouter } from "../api/trpc";
-import { activityRouter } from "./routers/activity";
-import { stagingRouter } from "./routers/staging";
+import { realtimeRouter } from "./routers/realtime";
 
-export const appRouter = createTRPCRouter({
-  activity: activityRouter,
-  staging: stagingRouter,
-});
+export const appRouter = createTRPCRouter({ realtime: realtimeRouter });
 
 export type AppRouter = typeof appRouter;
 

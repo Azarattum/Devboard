@@ -10,14 +10,20 @@ import {
 } from "recharts";
 import { ChartTooltipContent, ChartContainer, ChartTooltip } from "./chart";
 import { type Activity as ActivityType } from "~/server/db/schema";
-import { type HTMLAttributes, Fragment } from "react";
+import { type HTMLAttributes, Fragment, useState } from "react";
 import { cn } from "~/lib/utils";
+import { api } from "~/lib/trpc";
 
 export function Activity({
+  activity: initialActivity,
   className,
-  activity,
   ...props
 }: HTMLAttributes<HTMLSelectElement> & { activity: ActivityType[] }) {
+  const [activity, setActivity] = useState(initialActivity);
+  api.realtime.activity.useSubscription(undefined, {
+    onData: (entry) => setActivity((before) => [...before, entry]),
+  });
+
   return (
     <section
       className={cn(

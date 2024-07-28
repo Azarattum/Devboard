@@ -1,8 +1,12 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { applyWSSHandler } from "@trpc/server/adapters/ws";
 import { appRouter } from "./src/server/api/root";
+import { watch } from "~/server/jobs/watcher";
+import { attach } from "~/server/db/events";
 import { WebSocketServer } from "ws";
 import { createServer } from "http";
+import { db } from "~/server/db";
+import { config } from "config";
 import { parse } from "url";
 import next from "next";
 
@@ -52,4 +56,7 @@ void app.prepare().then(() => {
   });
 
   applyWSSHandler({ router: appRouter, wss: ws });
+
+  attach(db);
+  watch(config);
 });
