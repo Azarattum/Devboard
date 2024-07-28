@@ -49,10 +49,17 @@ export const buildsRelations = relations(builds, ({ one }) => ({
   }),
 }));
 
-export const statistics = table("statistics", {
-  label: text("label").primaryKey(),
-  value: int("value").default(0),
-});
+export const statistics = table(
+  "statistics",
+  {
+    day: int("day").notNull(),
+    label: text("label").notNull(),
+    value: int("value").default(0),
+  },
+  (table) => ({
+    pk: primaryKey({ columns: [table.day, table.label] }),
+  }),
+);
 export type Statistic = InferSelectModel<typeof statistics>;
 
 export const activity = table("activity", {

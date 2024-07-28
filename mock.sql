@@ -84,7 +84,7 @@ INSERT OR IGNORE INTO activity (timestamp, value, event) VALUES
   (1689539600, 2901, NULL),
   (1689539800, 3003, NULL);
 
-INSERT OR IGNORE INTO statistics (label, value) VALUES
-  ('Merged Branches', 42),
-  ('Support Messages', 69),
-  ('Tasks Planned', 37);
+INSERT OR IGNORE INTO statistics (label, value, day) VALUES
+  ('Merged Branches', 42, floor(unixepoch() / (24 * 60 * 60))),
+  ('Support Messages', 69, floor(unixepoch() / (24 * 60 * 60))),
+  ('Tasks Planned', 37, floor(unixepoch() / (24 * 60 * 60)));

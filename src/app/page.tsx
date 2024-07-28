@@ -2,17 +2,27 @@ import { Environments } from "./_components/environments";
 import { Statistics } from "./_components/statistics";
 import { Activity } from "./_components/activity";
 import { builds } from "~/server/db/schema";
+import { unixDay } from "~/lib/utils";
 import { desc } from "drizzle-orm";
 import { db } from "~/server/db";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
   const environments = await db.query.environments.findMany({
     with: { builds: { orderBy: desc(builds.timestamp), limit: 20 } },
   });
-  const activity = await db.query.activity.findMany();
-  const statistics = await db.query.statistics.findMany();
+
+  const activity = await db.query.activity.findMany({
+    where: (x, { gt }) => gt(x.timestamp, today),
+  });
+
+  const statistics = await db.query.statistics.findMany({
+    where: (x, { eq }) => eq(x.day, unixDay()),
+  });
 
   return (
     <main className="flex h-dvh w-dvw gap-16 p-8">
