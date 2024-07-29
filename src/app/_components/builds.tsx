@@ -3,6 +3,7 @@
 import { ChartTooltipContent, ChartContainer, ChartTooltip } from "./chart";
 import { BarChart, XAxis, YAxis, Cell, Bar } from "recharts";
 import { type Build } from "~/server/db/schema";
+import { formatTime } from "~/lib/utils";
 
 export function Builds({
   className,
@@ -41,6 +42,13 @@ export function Builds({
         <XAxis dataKey="duration" type="number" hide />
         <YAxis type="category" dataKey="time" hide />
         <ChartTooltip
+          formatter={(value) =>
+            typeof value === "number"
+              ? formatTime(value * 1000)
+              : Array.isArray(value)
+                ? value.join(", ") || null
+                : value
+          }
           content={<ChartTooltipContent hideIndicator />}
           cursor={false}
         />
