@@ -27,7 +27,7 @@ export function Activity({
   return (
     <section
       className={cn(
-        "rounded-lg border border-teal-50 bg-teal-50/50 p-2 shadow-lg shadow-teal-500/10 duration-500 animate-in fade-in",
+        "h-0 grow rounded-lg border border-teal-50 bg-teal-50/50 p-2 shadow-lg shadow-teal-500/10 duration-500 animate-in fade-in",
         className,
       )}
       {...props}
