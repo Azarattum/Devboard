@@ -1,5 +1,5 @@
 import type { ImperativeCapture, Capture, Config } from "~/types/config";
-import { statistics, type Build } from "../db/schema";
+import { environments, statistics, type Build } from "../db/schema";
 import { parseTime, unixDay } from "~/lib/utils";
 import EventEmitter from "node:events";
 import { and, eq } from "drizzle-orm";
@@ -8,9 +8,14 @@ import { db } from "../db";
 
 type Slack = slack.App;
 
-export function watch(config: Config) {
+export async function watch(config: Config) {
   const app =
     config.slack && new slack.App({ ...config.slack, socketMode: true });
+
+  await db
+    .insert(environments)
+    .values(Object.keys(config.builds).map((name) => ({ name })))
+    .onConflictDoNothing();
 
   Object.entries(config.builds).forEach(([environment, captures]) => {
     const captureWhen = (status: Build["status"]) => {
