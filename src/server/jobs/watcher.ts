@@ -57,8 +57,10 @@ const filter = (params: Capture) => (text?: string) => {
   if (include && !include.every((x) => text.includes(x))) return false;
 
   if (!match) return text;
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-  if (match.global) return String(text.match(match)?.length) || false;
+  if (match.global) {
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    return (text.match(match)?.length || null)?.toString() || false;
+  }
   return text.match(match)?.[capture ?? 0] ?? false;
 };
 
