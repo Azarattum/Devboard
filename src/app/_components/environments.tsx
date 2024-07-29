@@ -1,18 +1,36 @@
 "use client";
 
-import type { PropsWithChildren, HTMLAttributes } from "react";
+import { type PropsWithChildren, type HTMLAttributes, useState } from "react";
 import { TriangleAlert, CircleSlash, Ellipsis, Check } from "lucide-react";
 import { type EnvironmentBuilds } from "~/server/db/schema";
 import { Builds } from "./builds";
 import { cn } from "~/lib/utils";
+import { api } from "~/lib/trpc";
 
 export function Environments({
-  environments,
+  environments: initialEnvironments,
   className,
   ...props
 }: {
   environments?: EnvironmentBuilds[];
 } & HTMLAttributes<HTMLElement>) {
+  const [environments, setEnvironments] = useState(initialEnvironments ?? []);
+  api.realtime.builds.useSubscription(undefined, {
+    onData: (entry) =>
+      setEnvironments((before) => {
+        const index =
+          before?.findIndex((x) => x.name === entry.environment) ??
+          before.length;
+
+        const after = [...before];
+        after[index] = {
+          builds: [entry, ...(before[index]?.builds ?? [])],
+          name: entry.environment,
+        };
+        return after;
+      }),
+  });
+
   const badge = {
     pending: ({ children }: PropsWithChildren) => (
       <div className="flex size-44 flex-col items-center justify-evenly gap-2 rounded-lg border border-amber-100 bg-amber-50 shadow-lg shadow-amber-500/10">

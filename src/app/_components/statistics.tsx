@@ -1,16 +1,30 @@
 "use client";
 
+import { type HTMLAttributes, useState } from "react";
 import { type Statistic } from "~/server/db/schema";
-import { type HTMLAttributes } from "react";
 import { v3 as hash } from "murmurhash";
 import { cn } from "~/lib/utils";
+import { api } from "~/lib/trpc";
 
 export function Statistics({
-  statistics,
+  statistics: initialStatistics,
   className,
   ...props
 }: HTMLAttributes<HTMLSelectElement> & { statistics?: Statistic[] }) {
-  if (!statistics) return null;
+  const [statistics, setStatistics] = useState(initialStatistics ?? []);
+  api.realtime.statistics.useSubscription(undefined, {
+    onData: (entry) =>
+      setStatistics((before) => {
+        const index =
+          before?.findIndex((x) => x.label === entry.label) ?? before.length;
+
+        const after = [...before];
+        after[index] = entry;
+        return after;
+      }),
+  });
+
+  if (!statistics.length) return null;
   return (
     <section
       className={cn(
