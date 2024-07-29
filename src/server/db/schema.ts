@@ -32,7 +32,7 @@ export const builds = table(
     duration: real("duration"),
     status: text("status", { enum: ["success", "fail", "pending"] }).notNull(),
     users: text("users", { mode: "json" })
-      .default("[]")
+      .default([])
       .notNull()
       .$type<string[]>(),
   },
