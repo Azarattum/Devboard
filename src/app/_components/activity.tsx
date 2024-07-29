@@ -39,11 +39,13 @@ export function Activity({
             tickFormatter={(value) =>
               new Date(+value).toTimeString().slice(0, 5)
             }
+            dataKey={(x: ActivityType) => +x.timestamp}
+            domain={["dataMin", "dataMax"]}
             stroke="var(--ok-900)"
-            dataKey="timestamp"
             tickLine={false}
             axisLine={false}
             tickMargin={8}
+            type="number"
           />
           <ChartTooltip
             content={<ChartTooltipContent hideIndicator />}
