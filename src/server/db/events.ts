@@ -22,7 +22,7 @@ export function attach(db: Database) {
         target: [statistics.day, statistics.label],
         set: { value },
       });
-    console.info(` \x1b[1mi\x1b[0m "${label}" updated to (${value})`);
+    console.info(` \x1b[1mi\x1b[0m "${label}" updated to ${value}`);
   });
 
   events.on("activity", async (value, event) => {
