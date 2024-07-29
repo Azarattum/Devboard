@@ -1,7 +1,7 @@
 "use client";
 
 import type { PropsWithChildren, HTMLAttributes } from "react";
-import { TriangleAlert, Ellipsis, Check } from "lucide-react";
+import { TriangleAlert, CircleSlash, Ellipsis, Check } from "lucide-react";
 import { type EnvironmentBuilds } from "~/server/db/schema";
 import { Builds } from "./builds";
 import { cn } from "~/lib/utils";
@@ -30,6 +30,14 @@ export function Environments({
         </div>
       </div>
     ),
+    unknown: ({ children }: PropsWithChildren) => (
+      <div className="flex size-44 flex-col items-center justify-evenly gap-2 rounded-lg border border-stone-100 bg-stone-50 shadow-lg shadow-stone-500/10">
+        <CircleSlash className="box-content size-16 rounded-full border-2 border-stone-600 bg-stone-200 p-4 text-stone-600" />
+        <div className="truncate text-center font-light uppercase text-stone-900">
+          {children}
+        </div>
+      </div>
+    ),
     success: ({ children }: PropsWithChildren) => (
       <div className="flex size-44 flex-col items-center justify-evenly gap-2 rounded-lg border border-teal-100 bg-teal-50 shadow-lg shadow-teal-500/10">
         <Check className="box-content size-16 rounded-full border-2 border-teal-600 bg-teal-200 p-4 text-teal-600" />
@@ -47,7 +55,7 @@ export function Environments({
     >
       <div className="flex gap-4 animate-in fade-in zoom-in">
         {environments?.map(({ builds, name }) => {
-          const Badge = badge[builds[0]?.status ?? "pending"];
+          const Badge = badge[builds[0]?.status ?? "unknown"];
           return <Badge key={name}>{name}</Badge>;
         })}
       </div>
