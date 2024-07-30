@@ -1,7 +1,7 @@
 import type { Database } from ".";
 import { statistics, activity, builds } from "./schema";
+import { formatTime } from "../../lib/utils";
 import { events } from "../jobs/watcher";
-import { formatTime } from "~/lib/utils";
 
 export function attach(db: Database) {
   events.on("build", async (environment, status, duration, extra) => {

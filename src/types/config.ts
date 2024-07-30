@@ -1,4 +1,4 @@
-import { type Build } from "~/server/db/schema";
+import { type Build } from "../server/db/schema";
 
 export type Config = {
   slack?: {

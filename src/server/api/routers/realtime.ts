@@ -1,6 +1,6 @@
-import type { Statistic, Activity, Build } from "~/server/db/schema";
+import type { Statistic, Activity, Build } from "../../../server/db/schema";
+import { type Events, events } from "../../../server/jobs/watcher";
 import { createTRPCRouter, publicProcedure } from "../trpc";
-import { type Events, events } from "~/server/jobs/watcher";
 import { observable } from "@trpc/server/observable";
 
 export const realtimeRouter = createTRPCRouter({

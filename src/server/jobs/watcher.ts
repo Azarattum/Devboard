@@ -1,7 +1,7 @@
-import type { ImperativeCapture, Capture, Config } from "~/types/config";
+import type { ImperativeCapture, Capture, Config } from "../../types/config";
 import { environments, statistics, type Build } from "../db/schema";
 import slack, { type RichTextBlock } from "@slack/bolt";
-import { parseTime, unixDay } from "~/lib/utils";
+import { parseTime, unixDay } from "../../lib/utils";
 import EventEmitter from "node:events";
 import { and, eq } from "drizzle-orm";
 import { db } from "../db";
