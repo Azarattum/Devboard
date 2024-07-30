@@ -13,7 +13,13 @@ export default async function Home() {
   today.setHours(0, 0, 0, 0);
 
   const environments = await db.query.environments.findMany({
-    with: { builds: { orderBy: desc(builds.timestamp), limit: 20 } },
+    with: {
+      builds: {
+        where: (x, { gt }) => gt(x.timestamp, today),
+        orderBy: desc(builds.timestamp),
+        limit: 20,
+      },
+    },
   });
 
   const activity = await db.query.activity.findMany({
