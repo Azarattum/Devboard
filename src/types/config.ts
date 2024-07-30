@@ -25,6 +25,7 @@ type SlackCapture = {
   channel: string;
 
   extra?: "mentioned" | "author";
+  threads?: boolean;
   user?: string;
 } & CommonCapture;
 

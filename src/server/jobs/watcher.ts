@@ -85,7 +85,7 @@ function capture(
       params.interval,
     );
   } else {
-    const { channel, capture, extra, user } = params;
+    const { channel, capture, threads, extra, user } = params;
     function resolve(user?: string) {
       return (
         user &&
@@ -101,6 +101,7 @@ function capture(
       if (event.message.channel !== channel) return;
       if (subtype && subtype !== "bot_message") return;
       if (user && event.message.user !== user) return;
+      if (!threads && event.message.thread_ts) return;
       const { message } = event;
 
       const captured = validate(message.text);
