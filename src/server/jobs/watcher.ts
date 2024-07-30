@@ -122,7 +122,7 @@ function capture(
               return Promise.all(ids.map(resolve)).then((x) => x.join(", "));
             }
           },
-          author: () => resolve(message.text),
+          author: () => resolve(message.user),
         };
 
         const details = extra && (await resolvers[extra]());
