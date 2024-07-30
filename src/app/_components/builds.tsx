@@ -42,12 +42,20 @@ export function Builds({
         <XAxis dataKey="duration" type="number" hide />
         <YAxis type="category" dataKey="time" hide />
         <ChartTooltip
-          formatter={(value) =>
-            typeof value === "number"
-              ? formatTime(value * 1000)
-              : Array.isArray(value)
-                ? value.join(", ") || null
-                : value
+          formatter={(_0, _1, { payload }: { payload?: PassedBuild }) =>
+            payload && (
+              <span className="font-bold">
+                {payload?.timestamp.toTimeString().slice(0, 5)}:
+                <span className="font-normal">
+                  &nbsp;{formatTime(payload.duration * 1000)}
+                  {payload.extra && (
+                    <span className="text-neutral-600">
+                      &nbsp;({payload.extra})
+                    </span>
+                  )}
+                </span>
+              </span>
+            )
           }
           content={<ChartTooltipContent hideIndicator />}
           cursor={false}
@@ -58,16 +66,15 @@ export function Builds({
           stackId={"a"}
           radius={5}
         >
-          {passed.map((entry, index) => (
+          {passed.map((entry) => (
             <Cell
               stroke={stroke(entry)}
+              key={+entry.timestamp}
               fill={color(entry)}
               strokeWidth={2}
-              key={index}
             />
           ))}
         </Bar>
-        <Bar fill="transparent" dataKey={"users"} stackId={"a"} radius={5} />
       </BarChart>
     </ChartContainer>
   );
