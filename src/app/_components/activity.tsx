@@ -33,7 +33,7 @@ export function Activity({
       {...props}
     >
       <ChartContainer className="size-full" config={{}}>
-        <AreaChart accessibilityLayer data={activity}>
+        <AreaChart margin={{ top: 16 }} accessibilityLayer data={activity}>
           <CartesianGrid strokeOpacity={0.3} vertical={false} />
           <XAxis
             tickFormatter={(value) =>
