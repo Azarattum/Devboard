@@ -46,9 +46,9 @@ export async function watch(config: Config) {
     if (Number.isFinite(+value)) events.emit("activity", +value);
   });
 
-  capture(config.activity?.event, app, async (_, detail) => {
+  capture(config.activity?.event, app, async (event) => {
     const activity = await execute(config.activity?.idle);
-    if (Number.isFinite(+activity)) events.emit("activity", +activity, detail);
+    if (Number.isFinite(+activity)) events.emit("activity", +activity, event);
   });
 
   void app?.start();
@@ -66,7 +66,9 @@ const filter = (params: Capture) => (text?: string) => {
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     return (text.match(match)?.length || null)?.toString() || false;
   }
-  return text.match(match)?.[capture ?? 0] ?? false;
+  return (
+    text.match(match)?.[typeof capture === "number" ? capture : 0] ?? false
+  );
 };
 
 function capture(
@@ -83,7 +85,7 @@ function capture(
       params.interval,
     );
   } else {
-    const { channel, extra, user } = params;
+    const { channel, capture, extra, user } = params;
     function resolve(user?: string) {
       return (
         user &&
@@ -122,7 +124,8 @@ function capture(
           author: () => resolve(message.text),
         };
 
-        callback(captured, extra && (await resolvers[extra]()));
+        const details = extra && (await resolvers[extra]());
+        callback(capture === "extra" && details ? details : captured, details);
       }
     });
   }

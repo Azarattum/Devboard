@@ -15,9 +15,9 @@ export type Capture = SlackCapture | WebCapture;
 export type ImperativeCapture = WebCapture;
 
 type CommonCapture = {
+  capture?: "extra" | number;
   include?: string[];
   exclude?: string[];
-  capture?: number;
   match?: RegExp;
 };
 
