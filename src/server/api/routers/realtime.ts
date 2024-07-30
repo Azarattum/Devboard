@@ -6,10 +6,14 @@ import { observable } from "@trpc/server/observable";
 export const realtimeRouter = createTRPCRouter({
   builds: publicProcedure.subscription(() => {
     return observable<Build>((emit) => {
-      const handle: Handle<"build"> = (environment, status, duration) => {
+      const handle: Handle<"build"> = (
+        environment,
+        status,
+        duration,
+        extra: string | null = null,
+      ) => {
         const timestamp = new Date();
-        const users: string[] = []; /// TODO: support users
-        emit.next({ environment, timestamp, duration, status, users });
+        emit.next({ environment, timestamp, duration, status, extra });
       };
 
       events.on("build", handle);

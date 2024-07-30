@@ -1,9 +1,9 @@
 import type { ImperativeCapture, Capture, Config } from "~/types/config";
 import { environments, statistics, type Build } from "../db/schema";
+import slack, { type RichTextBlock } from "@slack/bolt";
 import { parseTime, unixDay } from "~/lib/utils";
 import EventEmitter from "node:events";
 import { and, eq } from "drizzle-orm";
-import slack from "@slack/bolt";
 import { db } from "../db";
 
 type Slack = slack.App;
@@ -14,14 +14,14 @@ export async function watch(config: Config) {
 
   await db
     .insert(environments)
-    .values(Object.keys(config.builds).map((name) => ({ name })))
+    .values(Object.keys(config.builds ?? {}).map((name) => ({ name })))
     .onConflictDoNothing();
 
-  Object.entries(config.builds).forEach(([environment, captures]) => {
+  Object.entries(config.builds ?? {}).forEach(([environment, captures]) => {
     const captureWhen = (status: Build["status"]) => {
-      capture(captures[status], app, (detail) => {
+      capture(captures[status], app, (detail, extra) => {
         const seconds = parseTime(detail) / 1000;
-        events.emit("build", environment, status, seconds);
+        events.emit("build", environment, status, seconds, extra);
       });
     };
 
@@ -30,7 +30,7 @@ export async function watch(config: Config) {
     captureWhen("fail");
   });
 
-  Object.entries(config.statistics).forEach(([label, target]) => {
+  Object.entries(config.statistics ?? {}).forEach(([label, target]) => {
     capture(target, app, async (count) => {
       const today = unixDay();
       const [current] = await db
@@ -42,12 +42,12 @@ export async function watch(config: Config) {
     });
   });
 
-  capture(config.activity.idle, app, (value) => {
+  capture(config.activity?.idle, app, (value) => {
     if (Number.isFinite(+value)) events.emit("activity", +value);
   });
 
-  capture(config.activity.event, app, async (detail) => {
-    const activity = await execute(config.activity.idle);
+  capture(config.activity?.event, app, async (_, detail) => {
+    const activity = await execute(config.activity?.idle);
     if (Number.isFinite(+activity)) events.emit("activity", +activity, detail);
   });
 
@@ -72,7 +72,7 @@ const filter = (params: Capture) => (text?: string) => {
 function capture(
   params: Capture | undefined,
   app: Slack | undefined,
-  callback: (captured: string) => void,
+  callback: (captured: string, extra?: string) => void,
 ) {
   if (!params) return;
   const validate = filter(params);
@@ -83,13 +83,47 @@ function capture(
       params.interval,
     );
   } else {
-    const { channel, user } = params;
-    app?.event("message", async (event) => {
-      if (event.message.channel !== channel) return;
-      if (user && (event.message as { user?: string }).user !== user) return;
+    const { channel, extra, user } = params;
+    function resolve(user?: string) {
+      return (
+        user &&
+        app?.client.users.info({ user }).then(
+          (x) => x.user?.name,
+          () => undefined,
+        )
+      );
+    }
 
-      const captured = validate((event.message as { text?: string }).text);
-      if (captured) callback(captured);
+    app?.event("message", async (event) => {
+      const { subtype } = event.message;
+      if (event.message.channel !== channel) return;
+      if (subtype && subtype !== "bot_message") return;
+      if (user && event.message.user !== user) return;
+      const { message } = event;
+
+      const captured = validate(message.text);
+      if (captured) {
+        const resolvers = {
+          mentioned: () => {
+            const ids = message.blocks
+              ?.filter((x): x is RichTextBlock => x.type === "rich_text")
+              .flatMap((block) =>
+                block.elements.flatMap((element) =>
+                  element.elements
+                    .filter((x) => x.type === "user")
+                    .map((x) => x.user_id),
+                ),
+              );
+
+            if (ids) {
+              return Promise.all(ids.map(resolve)).then((x) => x.join(", "));
+            }
+          },
+          author: () => resolve(message.text),
+        };
+
+        callback(captured, extra && (await resolvers[extra]()));
+      }
     });
   }
 }
@@ -108,7 +142,12 @@ async function execute(params?: ImperativeCapture) {
 }
 
 export type Events = {
-  build: [environment: string, status: Build["status"], duration: number];
+  build: [
+    environment: string,
+    status: Build["status"],
+    duration: number,
+    extra?: string,
+  ];
   statistics: [label: string, value: number, day: number];
   activity: [value: number, event?: string];
 };

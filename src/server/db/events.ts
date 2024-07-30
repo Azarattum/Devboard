@@ -4,10 +4,10 @@ import { events } from "../jobs/watcher";
 import { formatTime } from "~/lib/utils";
 
 export function attach(db: Database) {
-  events.on("build", async (environment, status, duration) => {
+  events.on("build", async (environment, status, duration, extra) => {
     await db
       .insert(builds)
-      .values({ environment, duration, status })
+      .values({ environment, duration, status, extra })
       .onConflictDoNothing();
     console.info(
       ` \x1b[1mi\x1b[0m ${status} ${environment} build (${formatTime(duration * 1000)})`,
