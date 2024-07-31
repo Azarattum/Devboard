@@ -15,8 +15,8 @@ export function Statistics({
   api.realtime.statistics.useSubscription(undefined, {
     onData: (entry) =>
       setStatistics((before) => {
-        const index =
-          before?.findIndex((x) => x.label === entry.label) ?? before.length;
+        let index = before.findIndex((x) => x.label === entry.label);
+        if (index === -1) index = before.length;
 
         const after = [...before];
         after[index] = entry;

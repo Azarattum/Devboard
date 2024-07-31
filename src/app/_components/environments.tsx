@@ -18,9 +18,8 @@ export function Environments({
   api.realtime.builds.useSubscription(undefined, {
     onData: (entry) =>
       setEnvironments((before) => {
-        const index =
-          before?.findIndex((x) => x.name === entry.environment) ??
-          before.length;
+        let index = before.findIndex((x) => x.name === entry.environment);
+        if (index === -1) index = before.length;
 
         const after = [...before];
         after[index] = {
