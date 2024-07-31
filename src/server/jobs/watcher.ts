@@ -98,8 +98,10 @@ function capture(
 
     app?.event("message", async (event) => {
       const { subtype } = event.message;
+      if (subtype && subtype !== "file_share" && subtype !== "bot_message") {
+        return;
+      }
       if (event.message.channel !== channel) return;
-      if (subtype && subtype !== "bot_message") return;
       if (user && event.message.user !== user) return;
       if (!threads && event.message.thread_ts) return;
       const { message } = event;
