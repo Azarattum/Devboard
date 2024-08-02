@@ -30,7 +30,9 @@ export const builds = table(
       .default(sql`(unixepoch())`)
       .notNull(),
     duration: real("duration"),
-    status: text("status", { enum: ["success", "fail", "pending"] }).notNull(),
+    status: text("status", {
+      enum: ["success", "fail", "pending", "locked", "unlocked"],
+    }).notNull(),
     extra: text("extra"),
   },
   (table) => ({

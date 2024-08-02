@@ -1,7 +1,13 @@
 "use client";
 
+import {
+  TriangleAlert,
+  CircleSlash,
+  Ellipsis,
+  Check,
+  Lock,
+} from "lucide-react";
 import { type PropsWithChildren, type HTMLAttributes, useState } from "react";
-import { TriangleAlert, CircleSlash, Ellipsis, Check } from "lucide-react";
 import { type EnvironmentBuilds } from "~/server/db/schema";
 import { Builds } from "./builds";
 import { cn } from "~/lib/utils";
@@ -47,6 +53,14 @@ export function Environments({
         </div>
       </div>
     ),
+    locked: ({ children }: PropsWithChildren) => (
+      <div className="flex size-44 flex-col items-center justify-evenly gap-2 rounded-lg border border-purple-100 bg-purple-50 shadow-lg shadow-purple-500/10">
+        <Lock className="box-content size-14 overflow-visible rounded-full border-2 border-purple-600 bg-purple-200 p-6 text-purple-600" />
+        <div className="truncate text-center font-light uppercase text-purple-900">
+          {children}
+        </div>
+      </div>
+    ),
     unknown: ({ children }: PropsWithChildren) => (
       <div className="flex size-44 flex-col items-center justify-evenly gap-2 rounded-lg border border-stone-100 bg-stone-50 shadow-lg shadow-stone-500/10">
         <CircleSlash className="box-content size-16 rounded-full border-2 border-stone-600 bg-stone-200 p-4 text-stone-600" />
@@ -72,7 +86,13 @@ export function Environments({
     >
       <div className="flex gap-4 animate-in fade-in zoom-in">
         {environments?.map(({ builds, name }) => {
-          const Badge = badge[builds[0]?.status ?? "unknown"];
+          let status = builds[0]?.status ?? ("unknown" as const);
+          if (status === "unlocked") {
+            status =
+              builds.find((x) => !["unlocked", "locked"].includes(x.status))
+                ?.status ?? "unknown";
+          }
+          const Badge = badge[status as keyof typeof badge];
           return <Badge key={name}>{name}</Badge>;
         })}
       </div>

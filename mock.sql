@@ -3,7 +3,7 @@ INSERT OR IGNORE INTO environments (name) VALUES ('preproduction');
 
 INSERT OR IGNORE INTO builds (environment, timestamp, duration, status, extra) VALUES
   ('development', unixepoch() + 1, 120.5, 'success', 'Alice'),
-  ('development', unixepoch() + 2, 90.2, 'fail', 'Bob"]'),
+  ('development', unixepoch() + 2, 90.2, 'fail', 'Bob'),
   ('development', unixepoch() + 3, NULL, 'pending', 'Charlie'),
   ('development', unixepoch() + 4, 150.3, 'success', 'Alice'),
   ('development', unixepoch() + 5, 75.4, 'fail', 'Bob'),
@@ -21,7 +21,7 @@ INSERT OR IGNORE INTO builds (environment, timestamp, duration, status, extra) V
   ('development', unixepoch() + 17, 180.2, 'fail', 'Charlie'),
   ('development', unixepoch() + 18, NULL, 'pending', 'Alice'),
   ('development', unixepoch() + 19, 30.8, 'success', 'Bob'),
-  ('development', unixepoch() + 20, 210.4, 'fail', 'Charlie'),
+  ('development', unixepoch() + 20, 210.4, 'locked', 'Charlie'),
   ('preproduction', unixepoch() + 1, NULL, 'pending', 'David'),
   ('preproduction', unixepoch() + 2, 90.2, 'success', 'Eve'),
   ('preproduction', unixepoch() + 3, 60.1, 'fail', 'Frank'),
