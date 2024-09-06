@@ -96,7 +96,7 @@ export function Environments({
           return <Badge key={name}>{name}</Badge>;
         })}
       </div>
-      <div className="grid grow grid-flow-col grid-cols-[50%_50%] border-t border-stone-100 p-4 after:pointer-events-none after:absolute after:bottom-0 after:left-0 after:block after:h-1/6 after:w-full after:bg-gradient-to-t after:from-white">
+      <div className="grid grow grid-flow-col grid-cols-[50%_50%] border-t border-stone-100 p-4 contain-size after:pointer-events-none after:absolute after:bottom-0 after:left-0 after:block after:h-1/6 after:w-full after:bg-gradient-to-t after:from-white">
         {environments?.map(({ builds, name }) => (
           <Builds
             className="size-full [&_svg]:odd:-scale-x-100"
