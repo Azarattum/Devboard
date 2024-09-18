@@ -25,9 +25,7 @@ export async function watch(config: Config) {
       });
     };
 
-    captureWhen("success");
-    captureWhen("pending");
-    captureWhen("fail");
+    (Object.keys(captures) as Build["status"][]).forEach(captureWhen);
   });
 
   Object.entries(config.statistics ?? {}).forEach(([label, target]) => {
